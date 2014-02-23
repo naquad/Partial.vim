@@ -1,0 +1,9 @@
+:Partial	partial.txt	/*:Partial*
+:Partial!	partial.txt	/*:Partial!*
+g:partial_command_signature	partial.txt	/*g:partial_command_signature*
+partial-commands	partial.txt	/*partial-commands*
+partial-contents	partial.txt	/*partial-contents*
+partial-intro	partial.txt	/*partial-intro*
+partial-notes	partial.txt	/*partial-notes*
+partial-options	partial.txt	/*partial-options*
+partial.txt	partial.txt	/*partial.txt*

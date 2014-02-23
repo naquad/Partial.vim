@@ -1,0 +1,101 @@
+*partial.txt* Run a command and append its output.
+
+Version: 0.1.0
+Author: naquad <naquad@gmail.com>
+License: Do What The Fuck You Want To Public License, Version 2
+
+==============================================================================
+CONTENTS                                     *partial-contents*
+
+INTRO                                 |partial-intro|
+COMMANDS                              |partial-commands|
+  Partial                             |:Partial|
+  Partial!                            |:Partial!|
+OPTIONS                               |partial-options|
+  SIGNATURE                           |g:partial_command_signature|
+NOTES                                 |partial-notes|
+
+==============================================================================
+INTRO                                 *partial-intro*
+
+Partial plugin provides commands for parsing selection/range for command and
+its input, then it executes command with given input (optional) and appends
+its output after selection/range indenting it same as first selection/range
+line.
+
+Command in selected text is denoted by signature. Signature is `#!` by default,
+you can change this with |g:partial_command_signature| variable.
+Signature is not a regular expression, it is searched for as is.
+Lines before command are ignored, lines after command are striped until
+the column where signature was seen and used for command input.
+
+That is:
+
+>
+  /* ignored
+   * another ignored line
+   * #!ruby
+   * # strippped until #
+   * puts "Hello, world!"
+   */
+<
+
+Selecting this text and running Partial on it will append "Hello, world!"
+string right after selection and indent it just like first line of
+selection/range.
+
+==============================================================================
+COMMANDS                        *partial-commands* *:Partial* *:Partial!*
+
+Two commands are given:
+  |:Partial| - executes given range as command with its input (stdin).
+             will not append anything if command exits with non-zero code.
+
+  |:Partial!|- same as partial, but ignoring exit code
+
+Both commands take optional range or operate on current line.
+
+==============================================================================
+OPTIONS                               *partial-options*
+
+Partial currently provides only one setting: |g:partial_command_signature|
+
+g:partial_command_signature     (default: `#!`) *g:partial_command_signature*
+                                a string that denotes command.
+                                string is searched as is.
+
+
+==============================================================================
+NOTES                                 *partial-notes*
+
+One could say that **Partial** should know about comment syntax of
+specific file type and it would be more convenient probably, but if
+you'll look into some plugin like NERDCommenter you'll see that there's
+at least 340 known file types and their comments. And what about unknown
+types? Should you configure each and every file type that **Partial**
+is unaware about? What about plain text? Bottom line is indentation
+maybe less convenient and it can cause some head ache when one combines
+tabs and spaces, but usually that doesn't happen and it is a universal
+solution that doesn't depend on file type.
+
+You can also execute one-liners:
+
+>
+// #!perl -e 'print "#define SIN$_ " . sin($_) . "\n" for 1..10'
+<
+
+input is optional.
+
+Also note that command is executed as
+>
+    (your command) >tmpfile 2>tmpfile <input
+<
+
+that is its not interactive, you can't call interactive commands.
+
+You can also run into problems when you're combining tabs and spaces.
+If you have very cryptic errors from your command then try to
+:set list  and see what's going on in your selection. If you'll see
+a space followed by tab then this is your problem. Space is still counted
+as symbol hence there's one symbol more and your input is striped one symbol
+further than it should.
